@@ -1,6 +1,6 @@
 # A simple game "Fifteen"
 
-## Demo <a href="https://regina5425.github.io/fifteen-game/">View Demo</a>
+## <a href="https://regina5425.github.io/fifteen-game/">View Demo</a>
 
 ## Built with:
 - HTML5
