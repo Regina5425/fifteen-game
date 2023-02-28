@@ -102,7 +102,7 @@ function getMatrix(arr) {
 
 function setPositionMatrix(matrix) {
   for (let y = 0; y < matrix.length; y++) {
-    for (let x = 0; x < matrix.length; x++) {
+    for (let x = 0; x < matrix[y].length; x++) {
       const value = matrix[y][x];
       const node = itemNodes[value - 1];
       setNodeStyles(node, x, y);
@@ -124,7 +124,7 @@ function shuffleArray(arr) {
 
 function findCoordinatesByNumber(number, matrix) {
   for (let y = 0; y < matrix.length; y++) {
-    for (let x = 0; x < matrix.length; x++) {
+    for (let x = 0; x < matrix[y].length; x++) {
       if (matrix[y][x] === number) {
         return { x, y };
       }
