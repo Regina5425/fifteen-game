@@ -16,6 +16,11 @@ h1 {
   margin-bottom: 1rem;
 }
 
+.game-shuffle {
+	pointer-events: none;
+	opacity: 0.8;
+}
+
 .fifteen {
   width: 100%;
   padding-bottom: 100%;

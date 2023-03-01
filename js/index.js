@@ -1,3 +1,4 @@
+const gameNode = document.getElementById('game');
 const containerNode = document.getElementById("fifteen");
 const itemNodes = Array.from(containerNode.querySelectorAll(".item"));
 const countItems = 16;
@@ -11,17 +12,51 @@ itemNodes[countItems - 1].style.display = "none";
 let matrix = getMatrix(itemNodes.map((item) => Number(item.dataset.matrixId)));
 setPositionMatrix(matrix);
 
-// Shuffle
+// Shuffle vers.1
+// document.getElementById("shuffle").addEventListener("click", () => {
+//   const flatMatrix = matrix.flat();
+//   const shuffledArray = shuffleArray(flatMatrix);
+//   matrix = getMatrix(shuffledArray);
+//   setPositionMatrix(matrix);
+// });
+
+// Shuffle vers.2
+const maxShuffleCount = 100;
+let timer;
+let shuffled = false;
+const shuffledClassName = 'game-shuffle';
+
 document.getElementById("shuffle").addEventListener("click", () => {
-  const flatMatrix = matrix.flat();
-  const shuffledArray = shuffleArray(flatMatrix);
-  matrix = getMatrix(shuffledArray);
-  setPositionMatrix(matrix);
+	if(shuffled) {
+		return;
+	}
+
+	shuffled = true;
+  let shuffleCount = 0;
+  clearInterval(timer);
+	gameNode.classList.add(shuffledClassName);
+
+  timer = setInterval(() => {
+    randomSwap(matrix);
+    setPositionMatrix(matrix);
+
+    shuffleCount += 1;
+
+    if (shuffleCount >= maxShuffleCount) {
+			gameNode.classList.remove(shuffledClassName);
+      clearInterval(timer);
+			shuffled = false;
+    }
+  }, 70);
 });
 
 // change position by click
 const blankNumber = 16;
 containerNode.addEventListener("click", (event) => {
+	if(shuffled) {
+		return;
+	}
+
   const buttonNode = event.target.closest("button");
 
   if (!buttonNode) {
@@ -41,6 +76,10 @@ containerNode.addEventListener("click", (event) => {
 
 // change position by arrows
 window.addEventListener("keydown", (e) => {
+	if(shuffled) {
+		return;
+	}
+
   if (!e.key.includes("Arrow")) {
     return;
   }
@@ -114,6 +153,41 @@ function setPositionMatrix(matrix) {
 function setNodeStyles(node, x, y) {
   const shiftPs = 100;
   node.style.transform = `translate3D(${x * shiftPs}%, ${y * shiftPs}%, 0)`;
+}
+
+let blockedCoords = null;
+function randomSwap(matrix) {
+  const blankCoords = findCoordinatesByNumber(blankNumber, matrix);
+  const validCoords = findValidCoords({
+    blankCoords,
+    matrix,
+    blockedCoords,
+  });
+
+  const swapCoords =
+    validCoords[Math.floor(Math.random() * validCoords.length)];
+
+  swap(blankCoords, swapCoords, matrix);
+  blockedCoords = blankCoords;
+}
+
+function findValidCoords({ blankCoords, matrix, blockedCoords }) {
+  const validCoords = [];
+
+  for (let y = 0; y < matrix.length; y++) {
+    for (let x = 0; x < matrix[y].length; x++) {
+      if (isValidForSwap({ x, y }, blankCoords)) {
+        if (
+          !blockedCoords ||
+          !(blockedCoords.x === x && blockedCoords.y === y)
+        ) {
+          validCoords.push({ x, y });
+        }
+      }
+    }
+  }
+
+  return validCoords;
 }
 
 function shuffleArray(arr) {
