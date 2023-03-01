@@ -23,6 +23,7 @@ document.getElementById("shuffle").addEventListener("click", () => {
 const blankNumber = 16;
 containerNode.addEventListener("click", (event) => {
   const buttonNode = event.target.closest("button");
+
   if (!buttonNode) {
     return;
   }
@@ -84,8 +85,8 @@ window.addEventListener("keydown", (e) => {
 //helpers
 function getMatrix(arr) {
   const matrix = [[], [], [], []];
-  let x = 0;
   let y = 0;
+  let x = 0;
 
   for (let i = 0; i < arr.length; i++) {
     if (x >= 4) {
@@ -139,8 +140,8 @@ function isValidForSwap(coords1, coords2) {
   const diffY = Math.abs(coords1.y - coords2.y);
 
   return (
-    diffX === 1 ||
-    (diffY === 1 && (coords1.x === coords2.x || coords1.y === coords2.y))
+    (diffX === 1 || diffY === 1) &&
+    (coords1.x === coords2.x || coords1.y === coords2.y)
   );
 }
 
